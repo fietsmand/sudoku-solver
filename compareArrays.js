@@ -74,10 +74,10 @@ const compare = (comparray, s) => {
     columns = resolveColumns(s)
     
     c = comparray
+    // if (missingNums.length !== s.length)
     s.map((row, rowNum) => {
         row.map((num, colNum) => {
             if(!num.length) {
-            //     // console.log(num);
                 let chunkId = getChunk(rowNum, colNum) 
                 c.map((j, i) => {
                     if(j === num) {
@@ -93,7 +93,7 @@ const compare = (comparray, s) => {
         })
         missingNums.push(c)
         c = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    })
+    });
 
     // //gets numbers that are needed
     // arr.map(num => {

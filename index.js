@@ -1,27 +1,27 @@
-// const sudoku = [
-//     [0,0,0,0,0,0,0,0,0],
-//     [0,0,0,0,0,3,0,8,5],
-//     [0,0,1,0,2,0,0,0,0],
-//     [0,0,0,5,0,7,0,0,0],
-//     [0,0,4,0,0,0,1,0,0],
-//     [0,9,0,0,0,0,0,0,0],
-//     [5,0,0,0,0,0,0,7,3],
-//     [0,0,2,0,1,0,0,0,0],
-//     [0,0,0,0,4,0,0,0,9],
-// ]
-
 const sudoku = [
-    [5,3,0,0,7,0,0,0,0], //i = 0
-    [6,0,0,1,9,5,0,0,0], //i = 1
-    [0,9,8,0,0,0,0,6,0],
-    [8,0,0,0,6,0,0,0,3],
-    [4,0,0,8,0,3,0,0,1],
-    [7,0,0,0,2,0,0,0,6],
-    [0,6,0,0,0,0,2,8,0],
-    [0,0,0,4,1,9,0,0,5],
-    [0,0,0,0,8,0,0,7,9]
-//   ^ sudoku[i=8][k=0]
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,3,0,8,5],
+    [0,0,1,0,2,0,0,0,0],
+    [0,0,0,5,0,7,0,0,0],
+    [0,0,4,0,0,0,1,0,0],
+    [0,9,0,0,0,0,0,0,0],
+    [5,0,0,0,0,0,0,7,3],
+    [0,0,2,0,1,0,0,0,0],
+    [0,0,0,0,4,0,0,0,9],
 ]
+
+// const sudoku = [
+//     [5,3,0,0,7,0,0,0,0], //i = 0
+//     [6,0,0,1,9,5,0,0,0], //i = 1
+//     [0,9,8,0,0,0,0,6,0],
+//     [8,0,0,0,6,0,0,0,3],
+//     [4,0,0,8,0,3,0,0,1],
+//     [7,0,0,0,2,0,0,0,6],
+//     [0,6,0,0,0,0,2,8,0],
+//     [0,0,0,4,1,9,0,0,5],
+//     [0,0,0,0,8,0,0,7,9]
+// //   ^ sudoku[i=8][k=0]
+// ]
 
 
 const chunksint = [0, 3, 6]
@@ -121,16 +121,28 @@ const compare = (comparray, arr) => {
     return arr
 }
 
+    let missingNums = [
+        completeRow, 
+        completeRow, 
+        completeRow, 
+        completeRow, 
+        completeRow, 
+        completeRow, 
+        completeRow,
+        completeRow, 
+        completeRow
+    ];
+
 let newSudoku = s => {
     newestSudoku = []
     let columns = resolveColumns(s)
     let chunks = resolveChunks(s)
-    const c = completeRow
+    let c = completeRow
     // console.log(columns);
     s.map((row, i) => {
 
         newRow = []
-        console.log(row);
+        // console.log(row);
         row.map((num, k) => {
             
             let newNum = []
@@ -140,16 +152,28 @@ let newSudoku = s => {
             // compare(completeRow, chunks[chunkId])
             if(num === 0) {
                 for(j = 1; j <= 9; j++){
-                    if(!row.includes(j) && !columns[k].includes(j) && !chunks[chunkId].includes(j)){
+                    if (!row.includes(j) && !columns[k].includes(j) && !chunks[chunkId].includes(j)) {
                         newNum.push(j)
                     }
                 }
             } else if (num.length > 1) {
     
-                num.map(n => {
-                    if (!row.includes(n) && !columns[k].includes(n) && !chunks[chunkId].includes(n)) {
-                        newNum.push(n)
+                num.map(n => {            
+                    if (!row.includes(n) && !columns[k].includes(n) && !chunks[chunkId].includes(n) && missingNums[i].includes(n)) {
+                        newNum.push(n);
                     }
+                    //  else {
+                    //     // missingNums[i].splice(missingNums[i].indexOf(n), 1);
+                    //     if(n === 7 && k === 1) {
+                    //         console.log("ROW: ", row.includes(n));
+                    //         console.log("Column: ", columns[k].includes(n));
+                    //         console.log("CHUNK: ", chunks[chunkId].includes(n));
+                    //         console.log("MISSING: ", missingNums[i]);
+                    //         console.log("MISSINGTOTAL: ", missingNums);
+                    //         console.log("I: ", i);
+                            
+                    //     }
+                    // }
                 })
                 
             } else {
@@ -158,7 +182,13 @@ let newSudoku = s => {
                         c.splice(i, 1)
                     }
                 })
-                c.map(n => {
+                c.map((n, o) => {
+                    let chunkId = getChunk(i, k)
+                    if (n === num) {
+                        if (chunks[chunkId].includes(n) || s[i].includes(n) || columns[k].includes(n)) {
+                            c.splice(o, 1)
+                        }
+                    }
                     // row.map((num, o) => {
                     //     if (num.length) {
                     //         num.map((k, i) => {
@@ -197,10 +227,32 @@ let newSudoku = s => {
                 newNum = newNum[0]
             }
 
+            // if (!num.length) {
+            //     let chunkId = getChunk(i, k)
+            //     c.map((j, o) => {
+            //         if (j === num) {
+            //             if (chunks[chunkId].includes(j) || s[i].includes(j) || columns[k].includes(j)) {
+            //                 c.splice(o, 1)
+            //             }
+            //         }
+            //     })
+
+            // }
+            
             newRow.push(newNum)
         });
         newestSudoku.push(newRow)
+        missingNums.splice(i, 1, c);
+        c = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
     })
+    // console.log("MISSINGNUMS", missingNums);
+
+    // if (missingNums.length === s.length) {
+    //     console.log("LENGTH IS THE SAME!");
+        
+    // }
+    
     return newestSudoku
 }
 
@@ -224,7 +276,8 @@ resolveSudoku = (a) => {
         })
     }
 
-    i = [0, 1, 2, 3, 6, 6, 6, 6, 6, 8]
+    // i = [0, 1, 2, 3, 6, 6, 6, 6, 6, 8]
+    i = [0, 1, 5, 6]
 
 
     // for (i = 0; possibilities.length!== 0; i++) {
@@ -239,9 +292,12 @@ resolveSudoku = (a) => {
 
     i.map(p => {
         console.log(possibilities.length);
+        
         possibilities = []
         newSud = newSudoku(newSud)
         
+        console.log(newSud);
+        console.log();
         
         resSud(newSud)
         // console.log(possibilities);

@@ -13,4 +13,4 @@ getChunk = (row, col) => {
 
 }
 
-getChunk(6,3)
+getChunk(6,3);
